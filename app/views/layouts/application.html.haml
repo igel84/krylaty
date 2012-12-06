@@ -1,0 +1,112 @@
+!!!
+%html{:dir => "ltr", :lang => "ru-RU", :xmlns => "http://www.w3.org/1999/xhtml"}
+  %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+  %title Центр развития творчества детей и юношества "Крылатый"
+  = stylesheet_link_tag 'application', :media => "all"
+  = javascript_include_tag "application"
+  = javascript_include_tag params[:controller]
+  %body
+    .PageBackgroundGradient
+    .PageBackgroundGlare
+      .PageBackgroundGlareImage
+    .Main
+      .Sheet
+        .Sheet-body
+          .nav
+            %ul.menu
+              - Article.roots.each do |art|
+                %li
+                  %span
+                    %span= link_to_unless_current art.title, article_path(art)
+                  - if art.children != []
+                    %ul
+                      - art.children.each do |art_child|
+                        %li= link_to_unless_current truncate(art_child.title, :ommission => '...', :length => 25), article_path(art_child), :title => art_child.title
+              %li
+                %span
+                  %span Галерея
+                - Galery.all.each do |gal|
+                  %li
+                    = link_to_unless_current gal.name, galery_path(gal)
+            .l
+            .r
+              %div
+          .contentLayout
+            .content
+              .Block
+                .Block-body
+                  .BlockContent
+                    .BlockContent-body
+                      #post-9.post
+                        %h2
+                          %a{:href => "#", :rel => "bookmark", :title => "Permanent Link to My first blog post"} My first blog post
+                        %small May 9, 2008
+                        .entry
+                          %p= yield
+                          %div{:style => "clear: left;"}
+                        %p.postmetadata
+                          Posted in
+                          %a{:href => "#", :rel => "category tag", :title => "View all posts in Uncategorized"} Uncategorized
+                          |
+                          %a{:href => "#", :title => "Comment on An image in a post"} 5 Comments »
+              .sidebar1
+                .Block
+                  .Block-body
+                    .BlockHeader
+                      %img{:src => "images/main.jpg"}/
+                      .l
+                      .r
+                        %div
+                    .BlockContent
+                      .BlockContent-body
+                        %ul
+                          %li
+                            %a{:href => "#", :title => "All News"} All News
+                            (50)
+                          %li
+                            %a{:href => "#", :title => "Best of the Year"} Best of the Year
+                            (4)
+                          %li
+                            %a{:href => "#", :title => "Advices"} Advices
+                            (24)
+                          %li
+                            %a{:href => "#", :title => "Gadgets"} Gadgets
+                            (17)
+                          %li
+                            %a{:href => "#", :title => "Photos"} Photos
+                            (6)
+                      .BlockContent-tl
+                      .BlockContent-tr
+                        %div
+                      .BlockContent-bl
+                        %div
+                      .BlockContent-br
+                        %div
+                      .BlockContent-tc
+                        %div
+                      .BlockContent-bc
+                        %div
+                      .BlockContent-cl
+                        %div
+                      .BlockContent-cr
+                        %div
+                      .BlockContent-cc
+          .Sheet-tl
+          .Sheet-tr
+            %div
+          .Sheet-bl
+            %div
+          .Sheet-br
+            %div
+          .Sheet-tc
+            %div
+          .Sheet-bc
+            %div
+          .Sheet-cl
+            %div
+          .Sheet-cr
+            %div
+          .Sheet-cc
+        #footer
+          Создание и продвижение сайтов в Воронеже:
+          %a{:href => "http://mlip.ru/", :title => "разработка и продвижение сайта mlip"} mlip
