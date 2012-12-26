@@ -12,6 +12,16 @@
 # закомментируйте эту строку.
 require 'bundler/capistrano'
 
+## Чтобы не хранить database.yml в системе контроля версий, поместите
+## dayabase.yml в shared-каталог проекта на сервере и раскомментируйте
+## следующие строки.
+
+#after "deploy:update_code", :copy_database_config
+ #task :copy_database_config, roles => :app do
+   #db_config = "#{shared_path}/database.yml"
+   #run "cp #{db_config} #{release_path}/config/database.yml"
+ #end
+
 # В rails 3 по умолчанию включена функция assets pipelining,
 # которая позволяет значительно уменьшить размер статических
 # файлов css и js.
@@ -71,15 +81,11 @@ set :repository,      "git://github.com/igel84/krylaty.git"
 ## Если ваш репозиторий в GitHub, используйте такую конфигурацию
 # set :repository,    "git@github.com:username/project.git"
 
-## Чтобы не хранить database.yml в системе контроля версий, поместите
-## dayabase.yml в shared-каталог проекта на сервере и раскомментируйте
-## следующие строки.
+after "deploy:update_code", :do_migrations
 
-# after "deploy:update_code", :copy_database_config
-# task :copy_database_config, roles => :app do
-#   db_config = "#{shared_path}/database.yml"
-#   run "cp #{db_config} #{release_path}/config/database.yml"
-# end
+task :do_migrations, roles => :app do
+  run "cd #{deploy_to}/current; rvm use #{rvm_ruby_string} do bundle exec rake RAILS_ENV=production db:migrate"
+end
 
 ## --- Ниже этого места ничего менять скорее всего не нужно ---
 
@@ -89,8 +95,8 @@ task :set_current_release, :roles => :app do
 end
 
 
-#set :unicorn_start_cmd, "(cd #{deploy_to}/current; rvm use #{rvm_ruby_string} do bundle exec unicorn_rails -Dc #{unicorn_conf})"
-set :unicorn_start_cmd, "(cd #{deploy_to}/current; rvm use #{rvm_ruby_string};bundle install --path ../../shared/gems;bundle exec unicorn_rails -Dc #{unicorn_conf})"
+  set :unicorn_start_cmd, "(cd #{deploy_to}/current; rvm use #{rvm_ruby_string} do bundle exec unicorn_rails -Dc #{unicorn_conf})"
+
 
 
 # - for unicorn - #

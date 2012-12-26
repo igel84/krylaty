@@ -6,6 +6,16 @@
   <%= stylesheet_link_tag 'application', :media => "all" %> 
   <%= javascript_include_tag "application" %>
   <%= javascript_include_tag params[:controller] %>
+  <script>
+    jQuery(document).ready(function(){
+      $("a[_cke_saved_href]").each(function(){
+        var lCkeSavedHref = jQuery(this).attr("_cke_saved_href");
+        lCkeSavedHref = lCkeSavedHref.replace(/http:\/\//g, "");
+        lCkeSavedHref = "http://krylaty.mlip.ru//" + lCkeSavedHref;
+        this.href = lCkeSavedHref;
+      });
+    });
+  </script>
 </head> 
 <body>
   <div class="PageBackgroundGradient"></div>
@@ -20,7 +30,15 @@
     <div class="nav">
       <ul class="menu">
         <%- Article.roots.each do |art| %>
-          <li><a href="<%= article_path(art) %>"><span><span><%= art.title %></span></span></a></li>
+          <li><a href="<%= article_path(art) %>"><span><span><%= art.title %></span></span></a>
+            <%- if art.children != [] %>
+              <ul>
+                <%- art.children.each do |art_child| %>
+                  <li><%= link_to_unless_current truncate(art_child.title, :ommission => '...', :length => 25), article_path(art_child), :title => art_child.title %></li>
+                <% end %>
+              </ul>
+            <% end %>
+          </li>
         <% end %>
         <li><a href="#"><span><span>Галерея</span></span></a>
           <ul>
